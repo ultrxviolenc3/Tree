@@ -34,7 +34,7 @@ bool add(int x){
 Node *temp=new(nothrow) Node(x);
 if(!temp){
 
-    return false; //exit
+    return false; 
 }
 
 if(root==nullptr)
@@ -43,7 +43,7 @@ if(root==nullptr)
 return true;
 }
 Node *current=root;
-while(current){ /// while(1)
+while(1){ 
 if(x<=current->val)
 {
 if(current->left!=nullptr) current=current->left;
@@ -68,8 +68,48 @@ return true;
 
 
 }
+return false;
+}
+
+void show(){
+  
+  if(!root){
+    cout<<"дерево пустое";
+    return;
+  }
+  queue<pair<int,Node*>>q;
+  q.push({1,root});
+  while(!q.empty()){
+    int x=q.front().first;
+    Node* curr=q.front().second;
+    q.pop();
+    cout<<"("<<x<<", "<<curr->val<<") "<<endl;
+    if(curr->left)
+    q.push({ x*2,curr->left});
+    if(curr->right)
+    q.push({x*2+1,curr->right});
+  }
 }
 
 
-
 };
+
+
+int main(){
+	 Tree t;
+    t.add(10);
+    t.add(5);
+    t.add(15);
+    t.add(12);
+    t.add(3);
+    t.add(7);
+    t.add(20);
+	t.show();
+	
+	if(t.search(7))
+	{
+		cout<<"Найден"<<endl;
+		}
+	
+	return 0;
+	}
