@@ -242,10 +242,10 @@ if(!f.is_open())
 	start(f);
 	Tree t;
 int com=-1;
-cout<<"1-dobavl"<<endl
-    <<"2-poisk"<<endl
-    <<"3-udalenie"<<endl
-    <<"4-vixod"<<endl;
+cout<<"1-Добавление"<<endl
+    <<"2-Поиск"<<endl
+    <<"3-Удаление"<<endl
+    <<"4-Выход"<<endl;
 while(com!=0)
 {
 	 cin>>com;
@@ -254,7 +254,7 @@ switch(com)
 	case 1:	
 		{
 			int num;
-			cout<<"Vvidite cislo"<<endl;
+			cout<<"Введите число"<<endl;
 			cin>>num;
 			f<<"<div align=\"center\">В дерево добавлен элемент "<<num<<"</div>"<<endl;
 			
@@ -264,17 +264,17 @@ switch(com)
 			}
 		case 2:
 		{ int num;
-			cout<<"vvidite cislo"<<endl;
+			cout<<"Введите число"<<endl;
 			cin>>num;
 			if(t.search(num))
-			{cout<<"Nayden"<<endl;
+			{cout<<"Найден"<<endl;
 				break;
 				}
-			cout<<"Ne nayden"<<endl;
+			cout<<"Не найден"<<endl;
 			break;
 			}
 		case 3:
-		{ cout<<"vvidite cislo"<<endl;
+		{ cout<<"Введите число"<<endl;
 			int num;
 			cin>>num;
 			if(t.Delete(num))
@@ -294,7 +294,7 @@ switch(com)
 		
 		
 		default:
-		cout<<"Takoy komandi net"<<endl;
+		cout<<"Такой команды нет "<<endl;
 		
 		}
 }
