@@ -1,5 +1,7 @@
 #include <iostream>
 #include <queue>
+#include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -28,6 +30,46 @@ else current=current->right;
 }
 return false;
 }
+
+bool Delete(int x)
+{
+  Node *current=root;
+  
+  while(current && current->val!=x){
+    if(x<current->val) current=current->left;
+    else current=current->right;
+  }
+  
+  if(!current) return false;
+  
+  if(current->left)
+  {
+    Node *max=current->left;
+    while(max->right) max=max->right;
+    current->val=max->val;
+    if(max->parent->left==max) max->parent->left=max->left;
+    else max->parent->right=max->left;
+    if(max->left) max->left->parent=max->parent;
+    delete max;
+  }
+  
+  else
+  {
+    Node *child = current->right;
+    if(!current->parent) root=child;
+    else if(current->parent->left==current) current->parent->left=child;
+    else current->parent->right=child;
+    if(child) child->parent=current->parent;
+    delete current;
+  }
+  
+  return true;
+}
+
+
+
+
+
 
 bool add(int x){
 
@@ -65,51 +107,197 @@ return true;
 
 }
 
-
-
 }
 return false;
 }
 
-void show(){
+void mermaid(ofstream &f){
+  int count=0;
+  pair<bool,int> a[200];
   
+  for(int i=0;i<200;i++)
+  {
+	  a[i].first=false;
+	  a[i].second=0;
+	  }
+	  
   if(!root){
-    cout<<"дерево пустое";
+    f<<"<div align=\"center\">Дерево пусто</div>"<<endl;
     return;
   }
+  
   queue<pair<int,Node*>>q;
-  q.push({1,root});
+  
+  q.push({0,root});
+  a[0].first=true;
+  a[0].second=root->val;
+  count++;
+  
   while(!q.empty()){
-    int x=q.front().first;
+    int i=q.front().first;
     Node* curr=q.front().second;
     q.pop();
-    cout<<"("<<x<<", "<<curr->val<<") "<<endl;
+    if(!curr) continue;
+    a[i].first=true;
+    a[i].second=curr->val;
     if(curr->left)
-    q.push({ x*2,curr->left});
+   { 
+	   q.push({ i*2+1,curr->left});
+	   count=i*2+1;
+	   }
     if(curr->right)
-    q.push({x*2+1,curr->right});
+    {
+		q.push({i*2+2,curr->right});
+		count=i*2+2;
+		}
   }
-}
 
+int levels= log2(count+1) + 1 ;
+int maxsize=pow(2,levels)-1;
+
+f<<"</div>"<<endl
+<<"<div class=\"mermaid\" align=\"center\" style=\"padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px solid black\">"<<endl
+<<"graph TD"<<endl;
+
+
+
+for(int i=0;i<maxsize;i++)
+{
+	int l=i*2+1;
+	int r=i*2+2;
+	
+ if(a[i].first){
+	 
+	 if(a[l].first)
+	 f<<i<<"[\""<<a[i].second<<"\"]---"<<l<<"[\""<<a[l].second<<"\"]"<<endl;
+	 else
+	  f<<i<<"[\""<<a[i].second<<"\"]~~~"<<l<<":::hidden"<<endl;
+	   if(a[r].first)
+	 f<<i<<"[\""<<a[i].second<<"\"]---"<<r<<"[\""<<a[r].second<<"\"]"<<endl;
+	 else
+	  f<<i<<"[\""<<a[i].second<<"\"]~~~"<<r<<":::hidden"<<endl;
+	  
+	 }
+	else{
+		 f<<i<<"[\""<<a[i].second<<"\"]~~~"<<l<<":::hidden"<<endl;
+		 f<<i<<"[\""<<a[i].second<<"\"]~~~"<<r<<":::hidden"<<endl;
+		
+		}
+		
+	}
+	
+f<<"classDef hidden display: none;"<<endl;
+	
+f<<"</div>"<<endl;
+	
+	
+}
 
 };
 
 
+void start(ofstream &f)
+{
+f<<"<!DOCTYPE html>"<<endl
+    <<"<html lang=\"ru\">"<<endl
+    <<"<head>"<<endl
+	<<"<meta charset=\"UTF-8\">"<<endl
+	<<"<title>Дерево поиска</title>"<<endl
+	<<"<script type=\"module\">"<<endl
+	<<"import mermaid from \"https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs\";"<<endl
+	<<"mermaid.initialize({ startOnLoad: true,"<<endl
+	<<"flowchart: {"<<endl
+	<<"useMaxWidth: false,"<<endl
+	<<"curve: 'linear',"<<endl
+	<<"nodeSpacing: 30,"<<endl
+	<<"rankSpacing: 30"<<endl
+	<<"}"<<endl
+	<<"});"<<endl
+	
+	<<"</script>"<<endl
+	<<"</head>"<<endl
+	<<"<body>"<<endl;
+	}
+
+
+void end(ofstream &f)
+{
+f<<"</div>"<<endl	
+ <<"</body>"<<endl
+ <<"</html>"<<endl;
+	
+}
+
+
+
+
 int main(){
-	 Tree t;
-    t.add(10);
-    t.add(5);
-    t.add(15);
-    t.add(12);
-    t.add(3);
-    t.add(7);
-    t.add(20);
-	t.show();
-	
-	if(t.search(7))
+ofstream f("tree.html");
+
+if(!f.is_open())
+{
+	cout<<"Oshibka otkritiya fayla"<<endl;
+	return -1;
+	}
+	start(f);
+	Tree t;
+int com=-1;
+cout<<"1-dobavl"<<endl
+    <<"2-poisk"<<endl
+    <<"3-udalenie"<<endl
+    <<"4-vixod"<<endl;
+while(com!=0)
+{
+	 cin>>com;
+switch(com)	
 	{
-		cout<<"Найден"<<endl;
+	case 1:	
+		{
+			int num;
+			cout<<"Vvidite cislo"<<endl;
+			cin>>num;
+			f<<"<div align=\"center\">В дерево добавлен элемент "<<num<<"</div>"<<endl;
+			
+			t.add(num);
+			t.mermaid(f);
+			break;
+			}
+		case 2:
+		{ int num;
+			cout<<"vvidite cislo"<<endl;
+			cin>>num;
+			if(t.search(num))
+			{cout<<"Nayden"<<endl;
+				break;
+				}
+			cout<<"Ne nayden"<<endl;
+			break;
+			}
+		case 3:
+		{ cout<<"vvidite cislo"<<endl;
+			int num;
+			cin>>num;
+			if(t.Delete(num))
+			{f<<"<div align=\"center\">В дереве удалён элемент "<<num<<"</div>"<<endl;
+				t.mermaid(f);
+				break;
+				}
+			f<<"<div align=\"center\">Элемент "<<num<<" не найден"<<"</div>"<<endl;
+			break;
+			}
+		
+		case 4:
+		{ 
+			end(f);
+			exit(0);
+			}
+		
+		
+		default:
+		cout<<"Takoy komandi net"<<endl;
+		
 		}
-	
+}
 	return 0;
 	}
+
