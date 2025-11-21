@@ -131,7 +131,7 @@ void mermaid(ofstream &f){
   q.push({0,root});
   a[0].first=true;
   a[0].second=root->val;
-  count++;
+
   
   while(!q.empty()){
     int i=q.front().first;
@@ -165,33 +165,29 @@ for(int i=0;i<maxsize;i++)
 {
 	int l=i*2+1;
 	int r=i*2+2;
-	
- if(a[i].first){
-	 
-	 if(a[l].first)
-	 f<<i<<"[\""<<a[i].second<<"\"]---"<<l<<"[\""<<a[l].second<<"\"]"<<endl;
-	 else
-	  f<<i<<"[\""<<a[i].second<<"\"]~~~"<<l<<":::hidden"<<endl;
-	   if(a[r].first)
-	 f<<i<<"[\""<<a[i].second<<"\"]---"<<r<<"[\""<<a[r].second<<"\"]"<<endl;
-	 else
-	  f<<i<<"[\""<<a[i].second<<"\"]~~~"<<r<<":::hidden"<<endl;
-	  
-	 }
-	else{
-		 f<<i<<"[\""<<a[i].second<<"\"]~~~"<<l<<":::hidden"<<endl;
-		 f<<i<<"[\""<<a[i].second<<"\"]~~~"<<r<<":::hidden"<<endl;
-		
-		}
-		
-	}
-	
-f<<"classDef hidden display: none;"<<endl;
-	
-f<<"</div>"<<endl;
-	
-	
+	if(a[i].first)
+	{
+    if(l<maxsize)
+    {
+    if(a[l].first)
+    f<<i<<"[\""<<a[i].second<<"\"]---"<<l<<"[\""<<a[l].second<<"\"]"<<endl;
+    else
+    f<<i<<"[\""<<a[i].second<<"\"]~~~"<<l<<":::hidden"<<endl;
+   }
+  if(r<maxsize)
+  {
+   if(a[r].first)
+   f<<i<<"[\""<<a[i].second<<"\"]---"<<r<<"[\""<<a[r].second<<"\"]"<<endl;
+   else
+   f<<i<<"[\""<<a[i].second<<"\"]~~~"<<r<<":::hidden"<<endl;
+   }
+  }
 }
+
+    f<<"classDef hidden display: none;"<<endl;
+    f<<"</div>"<<endl;
+ }
+
 
 };
 
