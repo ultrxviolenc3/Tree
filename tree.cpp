@@ -246,7 +246,7 @@ cout<<"1-Добавление"<<endl
     <<"2-Поиск"<<endl
     <<"3-Удаление"<<endl
     <<"4-Выход"<<endl;
-while(com!=0)
+while(1)
 {
 	 cin>>com;
 switch(com)	
@@ -257,7 +257,7 @@ switch(com)
 			cout<<"Введите число"<<endl;
 			cin>>num;
 			f<<"<div align=\"center\">В дерево добавлен элемент "<<num<<"</div>"<<endl;
-			
+			cout<<"В дерево добавлен элемент "<<endl;
 			t.add(num);
 			t.mermaid(f);
 			break;
@@ -279,17 +279,19 @@ switch(com)
 			cin>>num;
 			if(t.Delete(num))
 			{f<<"<div align=\"center\">В дереве удалён элемент "<<num<<"</div>"<<endl;
+				cout<<"Удалён элемент "<<endl;
 				t.mermaid(f);
 				break;
 				}
 			f<<"<div align=\"center\">Элемент "<<num<<" не найден"<<"</div>"<<endl;
+			cout<<"Элемент не найден"<<endl;
 			break;
 			}
 		
 		case 4:
 		{ 
 			end(f);
-			exit(0);
+			exit(1);
 			}
 		
 		
